@@ -6,14 +6,16 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const app = express();
 const PORT = process.env.PORT || 3000;
-const json_path = "./repertorio.json";
 
-app.use(cors());
+const app = express();
+
 app.use(express.json());
+app.use(cors());
 
 
-app.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
-});
+app.get("/api/repertorio", async (req, res) => {
+
+})
+
+

@@ -1,31 +1,30 @@
 import path from "path";
 import fs from "fs";
 import { json } from "stream/consumers";
+import { nanoid } from "nanoid";
 
 const repertorioPath = path.resolve("repertorio.json");
 
 const getSongs = async (req, res) => {
     const songs = JSON.parse(fs.readFileSync(repertorioPath, "utf-8"));
     res.json(songs);
+    return;
 }
 
 const postSong = async (req, res) => {
-    try{
-        const { titulo, artista } = req.body;
-        const songs = JSON.parse(fs.readFileSync(repertorioPath, "utf-8"));
-        const nuevaCancion = { id: nanoid(), titulo, artista };
-        songs.push(nuevaCancion);
+  try {
+    const { titulo, artista } = req.body;
+    const songs = JSON.parse(fs.readFileSync(repertorioPath, "utf-8"));
+    const nuevaCancion = { id: nanoid(), titulo, artista };
+    songs.push(nuevaCancion);
 
-        fs.writeFileSync(repertorioPath, JSON.stringify(songs));
+    fs.writeFileSync(repertorioPath, JSON.stringify(songs, null, 2));
 
-        res.send("Canción agregada correctamente");
-    } catch (error) {
-        res.json({ error: "Error al agregar la canción" });
-        return;
-    }
-
-    await writeFile(repertorioPath, JSON.stringify(data, null, 2));
     res.status(201).json(nuevaCancion);
+  } catch (error) {
+    console.error("Error en postSong:", error);
+    res.status(500).json({ error: "Error al agregar la canción", detalle: error.message });
+  }
 }
 
 
@@ -43,6 +42,7 @@ const putSong = async (req, res) => {
         fs.writeFileSync(repertorioPath, JSON.stringify(songs));
 
         res.json({ mensaje: "Canción actualizada" });
+        return;
     } catch (error) {
         res.status(500).json({ error: "Error al actualizar la canción" });
         return;
@@ -59,6 +59,7 @@ const deleteSong = async (req, res) => {
         fs.writeFileSync(repertorioPath, JSON.stringify(nuevasCanciones));
 
         res.json({ mensaje: "Canción eliminada" });
+        return;
     } catch (error) {
         res.status(500).json({ error: "Error al eliminar la canción" });
         return;

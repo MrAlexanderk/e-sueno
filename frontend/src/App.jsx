@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import CancionForm from "./components/CancionForm";
 import CancionesList from "./components/CancionesList";
 
@@ -8,8 +9,10 @@ function App() {
   const [canciones, setCanciones] = useState([]);
 
   const getCanciones = async () => {
-    const res = await fetch(API);
-    const data = await res.json();
+    console.log("Cargando canciones...");
+    const res = await axios.get(API);
+    const data = res.data;
+    console.log("Canciones cargadas:", data);
     setCanciones(data);
   };
 

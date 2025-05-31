@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios";
 
 const API = `http://localhost:${import.meta.env.VITE_API_PORT}/canciones`;
 
@@ -7,13 +8,15 @@ export default function CancionForm({ actualizar }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await fetch(API, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    });
-    setForm({ titulo: "", artista: "" });
-    actualizar();
+    try {
+      const response = await axios.post(API, form);
+      console.log("Respuesta del servidor:", response.data);
+
+      setForm({ titulo: "", artista: "" });
+      actualizar();
+    } catch (error) {
+      console.error("Error al enviar canción:", error);
+    }
   };
 
   return (

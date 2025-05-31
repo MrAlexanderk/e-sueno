@@ -1,20 +1,13 @@
+import axios from "axios";
+import EditarCancionModal from "./EditarCancionModal";
+import Button from "react-bootstrap/Button";
+
 const API = `http://localhost:${import.meta.env.VITE_API_PORT}/canciones`;
 
 export default function CancionItem({ cancion, actualizar }) {
   const eliminar = async () => {
-    await fetch(`${API}/${cancion.id}`, { method: "DELETE" });
-    actualizar();
-  };
-
-  const editar = async () => {
-    const titulo = prompt("Nuevo título:", cancion.titulo);
-    const artista = prompt("Nuevo artista:", cancion.artista);
-    if (titulo && artista) {
-      await fetch(`${API}/${cancion.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ titulo, artista }),
-      });
+    if (window.confirm(`¿Estás seguro de eliminar "${cancion.titulo}"?`)) {
+      await axios.delete(`${API}/${cancion.id}`);
       actualizar();
     }
   };
@@ -25,12 +18,10 @@ export default function CancionItem({ cancion, actualizar }) {
         {cancion.titulo} - {cancion.artista}
       </span>
       <div>
-        <button className="btn btn-warning btn-sm me-2" onClick={editar}>
-          ✏️
-        </button>
-        <button className="btn btn-danger btn-sm" onClick={eliminar}>
-          🗑️
-        </button>
+        <EditarCancionModal cancion={cancion} actualizar={actualizar} />
+        <Button variant="danger" size="sm" onClick={eliminar}>
+          🗑️ Eliminar
+        </Button>
       </div>
     </li>
   );

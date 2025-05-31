@@ -4,7 +4,7 @@ import { json } from "stream/consumers";
 
 const repertorioPath = path.resolve("repertorio.json");
 
-const getSongs = async () => {
+const getSongs = async (req, res) => {
     const songs = JSON.parse(fs.readFileSync(repertorioPath, "utf-8"));
     res.json(songs);
 }
